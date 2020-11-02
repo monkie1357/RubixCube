@@ -1,7 +1,5 @@
 #include "cube.h"
 
-using namespace CubeData;
-
 Cube::Cube() {
     for ( Colors c: {Red, White, Yellow, Orange, Blue, Green} )
     {
@@ -36,6 +34,7 @@ void Cube::printRow(const vector<char> &row)
 
 void Cube::printFace(int num)
 {
+    // VS Code doesn't like this
     Face f = faces.at(num);
     vector<Colors>& c = f.v;
     std::cout << std::endl << "Displaying Face: " << num << std::endl << std::endl;
@@ -50,21 +49,28 @@ void Cube::printFace(int num)
 
 void Cube::moveRight(bool clockwise)
 {
-    // TODO: Implement counter clockwise
+    move(clockwise, 'R', {{0, 1, 3, 2, 0}, {2, 3, 1, 0, 2}}, {{6, 3, 0, 7, 4, 1, 8, 5, 2}, {2, 5, 8, 1, 4, 7, 0, 3, 6}}, {2, 5, 8});
+}
 
+void Cube::moveLeft(bool clockwise)
+{
+    move(clockwise, 'L', {{0, 1, 3, 2, 0}, {2, 3, 1, 0, 2}}, {{6, 3, 0, 7, 4, 1, 8, 5, 2}, {2, 5, 8, 1, 4, 7, 0, 3, 6}}, {0, 3, 6});
+}
 
-    // Creates temp for setting the next face to the colors
+void Cube::move(bool clockwise, char sideChar, vector<vector<int>> singleRowOrder, vector<vector<int>> sideOrder, vector<int> squareIds)
+{
+    // Creates temp for setting the next face to the correct colors
     vector<Colors> temp;
 
     // Based on the order of the numbers in the color values
     vector<int> order;
     
     if (clockwise) {
-        order = {0, 1, 3, 2, 0};
-        std::cout << "R";
+        order = singleRowOrder.at(0);
+        std::cout << sideChar;
     } else {
-        order = {2, 3, 1, 0, 2};
-        std::cout << "R'";
+        order = singleRowOrder.at(1);
+        std::cout << sideChar << "'";
     }
 
     for (int i = 0; i < order.size() - 1; i++)
@@ -75,16 +81,16 @@ void Cube::moveRight(bool clockwise)
         Face& currentFace = faces.at(order.at(i));
 
         if (i == 0) {
-            nextFaceAlter.v.at(2) = currentFace.v.at(2);
-            nextFaceAlter.v.at(5) = currentFace.v.at(5);
-            nextFaceAlter.v.at(8) = currentFace.v.at(8);
+            nextFaceAlter.v.at(squareIds.at(0)) = currentFace.v.at(squareIds.at(0));
+            nextFaceAlter.v.at(squareIds.at(1)) = currentFace.v.at(squareIds.at(1));
+            nextFaceAlter.v.at(squareIds.at(2)) = currentFace.v.at(squareIds.at(2));
         } else {
-            nextFaceAlter.v.at(2) = temp.at(0);
-            nextFaceAlter.v.at(5) = temp.at(1);
-            nextFaceAlter.v.at(8) = temp.at(2);
+            nextFaceAlter.v.at(squareIds.at(0)) = temp.at(0);
+            nextFaceAlter.v.at(squareIds.at(1)) = temp.at(1);
+            nextFaceAlter.v.at(squareIds.at(2)) = temp.at(2);
         }
 
-        temp = {nextFace.v.at(2), nextFace.v.at(5), nextFace.v.at(8)};
+        temp = {nextFace.v.at(squareIds.at(0)), nextFace.v.at(squareIds.at(1)), nextFace.v.at(squareIds.at(2))};
     }
 
     // Rotates the right face
@@ -92,7 +98,15 @@ void Cube::moveRight(bool clockwise)
     vector<Colors> currentColors = faces.at(4).v;
 
     int counter = 0;
-    for (int i: {6, 3, 0, 7, 4, 1, 8, 5, 2})
+
+    if (clockwise)
+    {
+        order = sideOrder.at(0);
+    } else {
+        order = sideOrder.at(1);
+    } 
+
+    for (int i: order)
     {
         rFace.v.at(counter) = currentColors.at(i);
         counter++;

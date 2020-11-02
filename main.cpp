@@ -11,19 +11,17 @@ Windows:
 
 #include "cube.h"
 
-using namespace CubeData;
-
 int main()
 {
     Cube c;
 
-    c.moveRight();
+    c.moveLeft();
     
     std::cout << std::endl;
 
     c.printCube();
 
-    for (int i: {0, 2, 3, 1})
+    for (int i: {0, 2, 3, 1, 4})
     {
         c.printFace(i);
     }
