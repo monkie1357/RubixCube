@@ -31,10 +31,7 @@ public:
     * ' is said as prime, so B' -> B Prime
     */
 
-    void move(bool clockwise, char sideChar, vector<vector<int>> singleRowOrder, vector<vector<int>> sideOrder, vector<int> squareIds);
     void moveRight(bool clockwise = true);
-
-    // TODO: Define all of these
     void moveLeft(bool clockwise = true);
     void moveTop(bool clockwise = true);
     void moveBottom(bool clockwise = true);
@@ -52,4 +49,5 @@ private:
     *   5 -> Green -> Left
     */
     vector<Face> faces;
+    void move(bool clockwise, char sideChar, vector<vector<int>> singleRowOrder, vector<int> squareIds, int faceToRotate);
 };

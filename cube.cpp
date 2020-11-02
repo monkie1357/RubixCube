@@ -49,15 +49,43 @@ void Cube::printFace(int num)
 
 void Cube::moveRight(bool clockwise)
 {
-    move(clockwise, 'R', {{0, 1, 3, 2, 0}, {2, 3, 1, 0, 2}}, {{6, 3, 0, 7, 4, 1, 8, 5, 2}, {2, 5, 8, 1, 4, 7, 0, 3, 6}}, {2, 5, 8});
+    move(clockwise, 'R', {{0, 1, 3, 2, 0}, {2, 3, 1, 0, 2}}, {2, 5, 8}, 4);
 }
 
 void Cube::moveLeft(bool clockwise)
 {
-    move(clockwise, 'L', {{0, 1, 3, 2, 0}, {2, 3, 1, 0, 2}}, {{6, 3, 0, 7, 4, 1, 8, 5, 2}, {2, 5, 8, 1, 4, 7, 0, 3, 6}}, {0, 3, 6});
+    move(clockwise, 'L', {{0, 1, 3, 2, 0}, {2, 3, 1, 0, 2}}, {0, 3, 6}, 5);
 }
 
-void Cube::move(bool clockwise, char sideChar, vector<vector<int>> singleRowOrder, vector<vector<int>> sideOrder, vector<int> squareIds)
+void Cube::moveTop(bool clockwise)
+{
+    move(clockwise, 'T', {{0, 5, 3, 4, 0}, {4, 3, 5, 0, 4}}, {0, 1, 2}, 1);
+}
+
+void Cube::moveBottom(bool clockwise)
+{
+    move(clockwise, 'B', {{0, 5, 3, 4, 0}, {4, 3, 5, 0, 4}}, {6, 7, 8}, 2);
+}
+
+void Cube::moveFront(bool clockwise)
+{
+    move(clockwise, 'B', {{5, 1, 4, 2, 5}, {2, 4, 1, 5, 2}}, {2, 5, 8}, 0);
+}
+
+void Cube::moveBack(bool clockwise)
+{
+    move(clockwise, 'B', {{5, 1, 4, 2, 5}, {2, 4, 1, 5, 2}}, {0, 3, 6}, 3);
+}
+
+/*
+* Clockwise: Defines whether to move the side clockwise or counterclockwise
+* SideChar: The character to be printed out for the side (i.e., Right: 'R', Left: 'L')
+* SingleRowOrder: Order of the faces are in the single row that is being moved
+* SquareIds: The ID of the squares that are going to be moved in the singleroworder based on the 0-8 vector they are held in
+* FaceToRotate: ID of the face that needs to be rotated
+*/
+
+void Cube::move(bool clockwise, char sideChar, vector<vector<int>> singleRowOrder, vector<int> squareIds, int faceToRotate)
 {
     // Creates temp for setting the next face to the correct colors
     vector<Colors> temp;
@@ -94,16 +122,16 @@ void Cube::move(bool clockwise, char sideChar, vector<vector<int>> singleRowOrde
     }
 
     // Rotates the right face
-    Face& rFace = faces.at(4);
-    vector<Colors> currentColors = faces.at(4).v;
+    Face& rFace = faces.at(faceToRotate);
+    vector<Colors> currentColors = faces.at(faceToRotate).v;
 
     int counter = 0;
 
     if (clockwise)
     {
-        order = sideOrder.at(0);
+        order = {6, 3, 0, 7, 4, 1, 8, 5, 2};
     } else {
-        order = sideOrder.at(1);
+        order = {2, 5, 8, 1, 4, 7, 0, 3, 6};
     } 
 
     for (int i: order)

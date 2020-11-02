@@ -15,13 +15,13 @@ int main()
 {
     Cube c;
 
-    c.moveLeft();
+    c.moveFront();
     
     std::cout << std::endl;
 
     c.printCube();
 
-    for (int i: {0, 2, 3, 1, 4})
+    for (int i: {0, 2, 3, 1, 4, 5})
     {
         c.printFace(i);
     }
